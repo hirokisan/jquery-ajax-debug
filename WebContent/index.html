@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" content="">
+<title>Ajaxのデバッグ</title>
+<link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript" ></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+
+<!-- スクリプト部分 -->
+<script type="text/javascript">
+
+    $( function() {
+        $( '#ajax-button' ) .click(
+        function() {
+            var url = "http://localhost:8080/app/family";
+            var requestParam = {test : '{"key":"val"}'};
+            // デバッグ情報をクリアします。
+            allClear();
+            // リクエスト情報を出力します。
+            requestDebug(url, requestParam);
+            $.ajax({
+              url: url,
+              type:'GET',
+              data: requestParam,
+              dataType: 'jsonp',
+              success: function(data) {
+                           // レスポンス情報を出力します。
+                           responseDebug(data);
+                       },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                          // エラー情報を出力します。
+                          errorDebug(XMLHttpRequest, textStatus, errorThrown)
+                     }
+            });
+        });
+
+        /*
+         * デバッグ情報（リクエスト）を出力します。
+         */
+         function requestDebug(url, requestParam) {
+             $( '#request_url' ).html("Request URL : " + url);
+             $( '#request_parameter' ).html("Request Parameter : " + requestParam.test);
+         }
+
+         /*
+          * デバッグ情報（レスポンス）を出力します。
+          */
+          function responseDebug(data) {
+              $( '#response_parameter' ).html("responsData : " + data.responsData);
+          }
+
+          /*
+           * デバッグ情報（エラー）を出力します。
+           */
+           function errorDebug(XMLHttpRequest, textStatus, errorThrown) {
+               $("#XMLHttpRequest").html("XMLHttpRequest : " + XMLHttpRequest.status);
+               $("#textStatus").html("textStatus : " + textStatus);
+               $("#errorThrown").html("errorThrown : " + errorThrown.message);
+           }
+
+        /*
+         * デバッグ情報をクリアします。
+         */
+         function allClear() {
+             $( '#request_url' ).empty();
+             $( '#request_parameter' ).empty();
+             $( '#response_parameter' ).empty();
+             $( '#XMLHttpRequest' ).empty();
+             $( '#textStatus' ).empty();
+             $( '#errorThrown' ).empty();
+         }
+    } );
+</script>
+
+</head>
+
+<!-- HTML部分 -->
+<body>
+
+<h1>Ajaxのデバッグ</h1>
+<p><input type="button" id="ajax-button" value="click" /> <br />
+
+<hr>
+<p>リクエスト</p>
+<div id="request_url" ></div>
+<div id="request_parameter" ></div>
+
+<p>レスポンス</p>
+<div id="response_parameter" ></div>
+
+<p>エラー</p>
+<div id="XMLHttpRequest" ></div>
+<div id="textStatus" ></div>
+<div id="errorThrown" ></div>
+
+</body>
+</html>
